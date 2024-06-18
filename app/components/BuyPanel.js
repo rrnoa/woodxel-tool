@@ -49,7 +49,7 @@ const BuyPanel = ({pixelatedImage, colorsArray, colorDetails, blockSize, xBlocks
     formData.append("pdf2", pdf2);
 
     //fetch("https://lignumcd.local/wp-admin/admin-ajax.php", {
-    fetch("https://woodxel.com/wp-admin/admin-ajax.php", {
+    /* fetch("https://woodxel.com/wp-admin/admin-ajax.php", {
       method: "POST",
       credentials: 'include',
       body: formData
@@ -69,7 +69,7 @@ const BuyPanel = ({pixelatedImage, colorsArray, colorDetails, blockSize, xBlocks
       .catch((error) => {
         console.error("Fetch error:", error);
         alert("Connection Error. Please, reload page");
-      });
+      }); */
   };
   
   const calculatePrice = ()=> {
@@ -173,7 +173,7 @@ const BuyPanel = ({pixelatedImage, colorsArray, colorDetails, blockSize, xBlocks
     }
 
   // Guardar el PDF generado
-  doc.save('cuadriculas_colores.pdf');
+  doc.save('cuadriculas_numeradas.pdf');
   //const pdf2 = btoa(doc.output());
   const pdf2 = doc.output('blob');
 
@@ -352,7 +352,7 @@ const BuyPanel = ({pixelatedImage, colorsArray, colorDetails, blockSize, xBlocks
 
     }
 
-    //doc.save("pixeles.pdf");
+    doc.save("colores_pixeles.pdf");
     
     // Save the PDF in base64 format
     //const pdf1 = btoa(doc.output());
@@ -445,7 +445,7 @@ const BuyPanel = ({pixelatedImage, colorsArray, colorDetails, blockSize, xBlocks
 
   return (
     <>
-			<ModalFrame modalIsOpen={modalIsOpen} closeModal={onCancel} handleBuy={handleBuy} xBlocks = {xBlocks} yBlocks = {yBlocks} blockSize = {blockSize}/>
+			{/* <ModalFrame modalIsOpen={modalIsOpen} closeModal={onCancel} handleBuy={handleBuy} xBlocks = {xBlocks} yBlocks = {yBlocks} blockSize = {blockSize}/> */}
 
       {mobile && (
         <Button color="secondary" onClick={handleButtonClick}>
