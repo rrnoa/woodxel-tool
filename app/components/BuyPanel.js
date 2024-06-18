@@ -14,7 +14,7 @@ const BuyPanel = ({pixelatedImage, colorsArray, colorDetails, blockSize, xBlocks
 
   const handleBuy = async (event, framePrice = 0, color = 'not') => {
 
-    event.preventDefault();    
+    //event.preventDefault();    
 
     //en lugar de convertir todos los colores debería convertir solo los que van en la leyenda    
 
@@ -101,6 +101,7 @@ const BuyPanel = ({pixelatedImage, colorsArray, colorDetails, blockSize, xBlocks
       unit: "mm",
       format: [216, 279],
     });
+    doc.setLineWidth(0.5);
 
     doc.setFontSize(12);
     
@@ -164,10 +165,12 @@ const BuyPanel = ({pixelatedImage, colorsArray, colorDetails, blockSize, xBlocks
   
         if (countPixels < colorsArray.length) {
           doc.addPage();
-          doc.addPage();
+          //doc.addPage();
         } else {
           doc.addPage();
         }
+        doc.setLineWidth(0.5);
+
         xBase += xElement;
       } //termina de pintar de izquierda a derecha
     }
@@ -440,7 +443,8 @@ const BuyPanel = ({pixelatedImage, colorsArray, colorDetails, blockSize, xBlocks
 	};
 
   const handleButtonClick = () => {
-    setModalOpen(true);
+    handleBuy();
+    //setModalOpen(true);
   }
 
   return (
