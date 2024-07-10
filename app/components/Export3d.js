@@ -24,7 +24,6 @@ const Export3d = ({exportGroup, handleLoading, mobile, setCurrentStep}) => {
 		exporter.parse(
 			exportGroup, 
 			async (gltf) => {
-				// gltf es un objeto JSON que representa tu escena
 				const output = JSON.stringify(gltf, null, 2);
 				const blob = new Blob([output], {type: 'application/octet-stream'});
 				saveAsZip(blob, 'model3D-' + Date.now()); // Solo el nombre base y el timestamp
@@ -65,6 +64,7 @@ const Export3d = ({exportGroup, handleLoading, mobile, setCurrentStep}) => {
 		closeModal={closeModal}  
 		compressModel = {compressModel}
 	/>
+	
 	{mobile && (
 		<button id="woodxel_panel_3d" onClick={onclickHandler}>			
 			<span>
@@ -75,7 +75,7 @@ const Export3d = ({exportGroup, handleLoading, mobile, setCurrentStep}) => {
 	{!mobile && (
 		<Tooltip showArrow={true} color="secondary" content="Download now your Free 3d model" radius='sm'>
 		<Button  color="secondary" radius="sm" className="text-base font-bold" id="woodxel_panel_3d" onClick={onclickHandler}>			
-				Get Your FREE 3D Model         
+				Get Your FREE 3D Model        
 		</Button>
 		</Tooltip>				
 	)}	

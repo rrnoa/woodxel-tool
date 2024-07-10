@@ -769,6 +769,19 @@ ul li button.active {
     bottom: 40px;
 }
 
+#woodxel_photo{
+    margin-top: 10px;
+    position: absolute;
+    top: 40px;
+}
+
+#woodxel_photo_prepare{
+    margin-top: 10px;
+    position: absolute;
+    top: 40px;
+    left: 60px;
+}
+
 .step-item2 a:hover {
     opacity: .8;
 }

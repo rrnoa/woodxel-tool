@@ -3,13 +3,17 @@ import * as THREE from 'three';
 import pixelateImg from '@/app/libs/pixelate';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { SVGLoader } from 'three/addons/loaders/SVGLoader.js';
-import { configCamera, configRender, configLights, configFloor, configWall, animate, configControls, configFrame } from './three-setup';
+import { configCamera, configRender, configLights, configFloor, configWall, configControls, configFrame } from './three-setup';
 import { FingerMoveSvg } from './icons/SvgIcons';
+import { Button } from '@nextui-org/button';
 
 
-const Escena3D = ({ width, height, blockSize, croppedImg, setPixelInfo, onGroupRefChange, theme='light', setProductImg, handleLoading, sceneRef, renderRef, goToNextStep, btnSizeClick, mobile }) => {
+const Escena3D = ({ width, height, blockSize, croppedImg, setPixelInfo, onGroupRefChange, theme='light', setProductImg, handleLoading, sceneRef, renderRef, goToNextStep, btnSizeClick, mobile}) => {
     
     const [showFinger, setShowFinger] = useState(true);
+    const [paraFoto, setParaFoto] = useState(false);
+	const [downloadPhoto, setDownloadPhoto] = useState(false);
+	const downloadPhotoRef = useRef(downloadPhoto);
 	
 	const canvasRef = useRef(null);
 	const dennisMaterialRef = useRef(null);
@@ -17,12 +21,13 @@ const Escena3D = ({ width, height, blockSize, croppedImg, setPixelInfo, onGroupR
 
 	const inch = 0.0254;
 
-	const snap = useRef(false);
-
 	const models = ['woodxel-resources/3d/medium_rough1.glb', 'woodxel-resources/3d/medium_rough2.glb', 'woodxel-resources/3d/medium_rough3.glb', 'woodxel-resources/3d/medium_rough4.glb'];
 
 	const meshesRef = useRef([]);//almacena los bloques cargados
 	const allColorsRef = useRef([]);
+
+	const initialCanvasWidth = useRef();
+	const initialCanvasHeight = useRef();
 	
 	
     useEffect(() => {
@@ -33,6 +38,10 @@ const Escena3D = ({ width, height, blockSize, croppedImg, setPixelInfo, onGroupR
 
 		const paintAreaWidth = canvasRef.current?.offsetWidth;
 		const paintAreaHeight = canvasRef.current?.offsetHeight;
+
+		initialCanvasWidth.current = canvasRef.current?.offsetWidth;
+		initialCanvasHeight.current = canvasRef.current?.offsetHeight;
+
 		const camera = configCamera(paintAreaWidth, paintAreaHeight, width, height);			
 		configRender(renderRef, canvasRef.current, paintAreaWidth, paintAreaHeight);
 		const directionalLight = configLights(width, height, sceneRef);				
@@ -97,9 +106,9 @@ const Escena3D = ({ width, height, blockSize, croppedImg, setPixelInfo, onGroupR
 							if (goToNextStep && !btnSizeClick) goToNextStep(); //para saber si el evento proviene de hace click sobre 1,2,3
 							// si es sobre preview btnSizeClick=false y entonces ira al nuevo paso
 							//pero si es sobre 1,2,3 btnSizeClick = true y no va ir para otro paso si se están mostrando los tooltips
-							let countAnimate = 0; //para solo ejecutar el snapshot una sola vez
 							//aqui se controlla mediante un callback sincronizar el frame render con el snapshoot, para que no de imagen en negro.
-							cancelAnimation = animate(renderRef, sceneRef, camera, width, height, setProductImg, snapshot, countAnimate);
+							animate(sceneRef, camera, paintAreaWidth, paintAreaHeight);
+							//cancelAnimation = animate(renderRef, sceneRef, camera, width, height, setProductImg);
 							
 						}).catch(error => {
 							alert("An issue occurred while loading the content. Please try refreshing the page.")
@@ -144,7 +153,7 @@ const Escena3D = ({ width, height, blockSize, croppedImg, setPixelInfo, onGroupR
 			if (canvasRef.current && renderRef) {
 				const canvasWidth = canvasRef.current.offsetWidth;
 				const canvasHeight = canvasRef.current.offsetHeight;
-		
+				console.log("resize")
 				renderRef.setSize(canvasWidth, canvasHeight);
 				camera.aspect = canvasWidth / canvasHeight;
 				camera.updateProjectionMatrix();
@@ -157,11 +166,32 @@ const Escena3D = ({ width, height, blockSize, croppedImg, setPixelInfo, onGroupR
 		// Función de limpieza
 		return () => {	
 			unRegisterWindowListener(onResize);
-			cancelAnimation(); // Cancelling the animation frame here
+			//cancelAnimation(); // Cancelling the animation frame here
 			cr.removeChild(renderRef.domElement);
-			removeObjWithChildren(sceneRef);				
+			removeObjWithChildren(sceneRef);
 		};
     }, [blockSize]); // Dependencias del efecto
+
+	const animate = (scene, camera, width, height) => {
+
+		const animation = () => {
+			requestAnimationFrame(animation);
+			renderRef.render(scene, camera);
+			//console.log(downloadPhoto);
+			if (downloadPhotoRef.current) {
+				//renderRef.setSize(width * 2, height * 2)
+				snapshot(renderRef);
+				setDownloadPhoto(false)
+				//renderRef.setSize(width, height)
+			}
+		}
+		animation();
+	}
+	
+
+	useEffect(() => {
+		downloadPhotoRef.current = downloadPhoto;
+	  }, [downloadPhoto]);
 
 
 	const registerWindowsListener = (action) =>{		
@@ -217,8 +247,28 @@ const Escena3D = ({ width, height, blockSize, croppedImg, setPixelInfo, onGroupR
 		}
 	}
 
+	const downloadPhotoHandler = (event) => {
+		event.preventDefault();
+		setDownloadPhoto(true);
+	}
+
+	const prepareForPicture = ()=>{
+		if(!paraFoto) {
+			renderRef.setSize(initialCanvasWidth.current * 3, initialCanvasHeight.current * 3);
+		} else {
+			renderRef.setSize(initialCanvasWidth.current, initialCanvasHeight.current);
+		}
+		setParaFoto((prev)=>!prev);
+	}
+
     return (
 		 <>
+		 <div id="woodxel_photo" >
+		 	<Button color="secondary" radius="sm" className="text-base font-bold" onClick={prepareForPicture}>{!paraFoto?"Prepare": "Finish"}</Button>
+			{paraFoto?<Button  style={{marginLeft:'20px'}} color="secondary" radius="sm" className="text-base font-bold" onClick={downloadPhotoHandler}>Photo</Button> :  ""}
+		 </div>
+		 
+		 {console.log("render >",downloadPhoto)}
     		<div onTouchStart={()=>{setShowFinger(false)}}			
 			ref={canvasRef} style={{ width: '100%', height: '100%'}} />
 			{ showFinger &&	mobile &&
@@ -230,49 +280,15 @@ const Escena3D = ({ width, height, blockSize, croppedImg, setPixelInfo, onGroupR
     );
 };// -------------------FIN del componente-----------------------
 
-const snapshot = (renderRef, width, height, setProductImg) => {		
+const snapshot = (renderRef) => {	
+	console.log("take a shot")
+   
+    let canvas = renderRef.domElement;   
+	
+	const dataURL = canvas.toDataURL('image/jpeg',1);
 
-    const point1 = [0.6096, 200];
-    const point2 = [1.27, 320];
-
-    const regionWidth = interpolateLinear(Math.max(width,height), point1, point2);
-    const regionHeight = regionWidth;
-
-    let canvas = renderRef.domElement;
-    // Calcula el centro del canvas original
-    const centerX = canvas.width / 2;
-    const centerY = canvas.height / 2;
-
-    const x = centerX - regionWidth / 2;
-    const y = centerY - regionHeight / 2;
-
-    // Crea un canvas temporal y captura la región
-    const tempCanvas = document.createElement('canvas');
-    tempCanvas.width = regionWidth;
-    tempCanvas.height = regionHeight;
-    const tempCtx = tempCanvas.getContext('2d');
-
-    // Dibuja la región centrada en el canvas temporal
-    tempCtx.drawImage(canvas, x, y, regionWidth, regionHeight, 0, 0, regionWidth, regionHeight);
-
-    // Obtén la imagen de la región como data URL
-    var dataURL = tempCanvas.toDataURL('image/jpeg', 1); //100 % calidad
-
-	//downloadResizedImage(dataURL);
-    setProductImg(dataURL);
-}
-
-const interpolateLinear = (x, point1, point2) => {
-    const [x0, y0] = point1;
-    const [x1, y1] = point2;
-
-    // Asegúrate de que x1 y x0 no sean iguales para evitar división por cero
-    if (x1 === x0) {
-        console.error("Error: x0 y x1 no pueden ser iguales.");
-        return null;
-    }
-
-    return y0 + ((y1 - y0) / (x1 - x0)) * (x - x0);
+	downloadResizedImage(dataURL);
+    //setProductImg(dataURL);
 }
 
 function loadModelWithRetry(url, maxAttempts, delay, onLoad, onProgress, onError) {
