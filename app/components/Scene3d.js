@@ -21,7 +21,15 @@ const Escena3D = ({ width, height, blockSize, croppedImg, setPixelInfo, onGroupR
 
 	const inch = 0.0254;
 
-	const models = ['woodxel-resources/3d/medium_rough1.glb', 'woodxel-resources/3d/medium_rough2.glb', 'woodxel-resources/3d/medium_rough3.glb', 'woodxel-resources/3d/medium_rough4.glb'];
+	const models = [
+		'woodxel-resources/3d/1.glb', 
+		'woodxel-resources/3d/2.glb', 
+		'woodxel-resources/3d/3.glb', 
+		'woodxel-resources/3d/4.glb', 
+		'woodxel-resources/3d/5.glb', 
+		'woodxel-resources/3d/6.glb', 
+		'woodxel-resources/3d/7.glb', 
+		'woodxel-resources/3d/8.glb'];
 
 	const meshesRef = useRef([]);//almacena los bloques cargados
 	const allColorsRef = useRef([]);
@@ -381,6 +389,7 @@ const paintFrame = (meshes, allColors, sceneRef, width, height, blockSize, onGro
 		const material = meshes[index].material;
 		material.vertexColors = true;
 		material.metalness = 0;
+		material.roughness = 0.9;
 		material.emissiveIntensity = 0;
 		material.needsUpdate = true;
 		material.color = new THREE.Color(0xffffff);
