@@ -60,14 +60,14 @@ export const configControls = (camera, renderer) => {
     //config cotrols
    const controls = new OrbitControls(camera, renderer.domElement);
     //controls.minDistance = Math.max(5, Math.hypot(width, height)/4);
-    controls.minDistance = 0.5;
+    //controls.minDistance = 0.5;
     controls.maxDistance = 20;
     controls.enablePan = false;
     //controls.maxPolarAngle = THREE.MathUtils.degToRad(92);
-    controls.minPolarAngle = THREE.MathUtils.degToRad(45);
+   /*  controls.minPolarAngle = THREE.MathUtils.degToRad(45);
     controls.maxPolarAngle = controls.getPolarAngle();
     controls.maxAzimuthAngle = THREE.MathUtils.degToRad(60);
-    controls.minAzimuthAngle = THREE.MathUtils.degToRad(-60);
+    controls.minAzimuthAngle = THREE.MathUtils.degToRad(-60); */
     controls.update();
 
     return controls;

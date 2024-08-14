@@ -22,10 +22,10 @@ const Escena3D = ({ width, height, blockSize, croppedImg, setPixelInfo, onGroupR
 	const inch = 0.0254;
 
 	const models = [
-		'woodxel-resources/3d/rough1.glb', 
-		'woodxel-resources/3d/rough1.glb', 
-		'woodxel-resources/3d/rough1.glb', 
-		'woodxel-resources/3d/rough1.glb'];
+		'woodxel-resources/3d/medium_rough1.glb', 
+		'woodxel-resources/3d/medium_rough2.glb', 
+		'woodxel-resources/3d/medium_rough3.glb', 
+		'woodxel-resources/3d/medium_rough4.glb'];
 
 	const meshesRef = useRef([]);//almacena los bloques cargados
 	const allColorsRef = useRef([]);
@@ -53,14 +53,14 @@ const Escena3D = ({ width, height, blockSize, croppedImg, setPixelInfo, onGroupR
 		const floorMesh = configFloor(height);
 		const wallMesh = configWall(height);
 
-		configFrame(width, height, sceneRef);
+		//configFrame(width, height, sceneRef);
 	
 		const ambientlight = new THREE.AmbientLight(0xffffff, 3);						
 	
 		sceneRef.add(ambientlight);
 		sceneRef.add(directionalLight);	
-		sceneRef.add( floorMesh );						
-		sceneRef.add( wallMesh );
+		//sceneRef.add( floorMesh );						
+		//sceneRef.add( wallMesh );
 						
 		let cancelAnimation;
 		pixelateImg(croppedImg, xBlocks, yBlocks)
@@ -340,8 +340,8 @@ const paintFrame = (meshes, allColors, sceneRef, width, height, blockSize, onGro
 	  const matrix = new THREE.Matrix4();
 	  const fila = Math.floor(index / currentXBlocks);
 	  const columna = index % currentXBlocks;
-	  const posX = columna * blockSize + offsetX;
-	  const posY = -fila * blockSize - offsetY;
+	  const posX = columna * (blockSize + 0.01) + offsetX;
+	  const posY = -fila * (blockSize + 0.01) - offsetY;
 
 	  matrix.setPosition(posX, posY, 0);	
 	  
@@ -389,6 +389,7 @@ const paintFrame = (meshes, allColors, sceneRef, width, height, blockSize, onGro
 		material.vertexColors = true;
 		material.metalness = 0;
 		material.roughness = 0.9;
+		material.side = THREE.DoubleSide;
 		material.emissiveIntensity = 0;
 		material.needsUpdate = true;
 		material.color = new THREE.Color(0xffffff);
