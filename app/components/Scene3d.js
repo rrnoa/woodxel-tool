@@ -22,14 +22,10 @@ const Escena3D = ({ width, height, blockSize, croppedImg, setPixelInfo, onGroupR
 	const inch = 0.0254;
 
 	const models = [
-		'woodxel-resources/3d/1.glb', 
-		'woodxel-resources/3d/2.glb', 
-		'woodxel-resources/3d/3.glb', 
-		'woodxel-resources/3d/4.glb', 
-		'woodxel-resources/3d/5.glb', 
-		'woodxel-resources/3d/6.glb', 
-		'woodxel-resources/3d/7.glb', 
-		'woodxel-resources/3d/8.glb'];
+		'woodxel-resources/3d/rough1.glb', 
+		'woodxel-resources/3d/rough1.glb', 
+		'woodxel-resources/3d/rough1.glb', 
+		'woodxel-resources/3d/rough1.glb'];
 
 	const meshesRef = useRef([]);//almacena los bloques cargados
 	const allColorsRef = useRef([]);
@@ -120,6 +116,7 @@ const Escena3D = ({ width, height, blockSize, croppedImg, setPixelInfo, onGroupR
 							
 						}).catch(error => {
 							alert("An issue occurred while loading the content. Please try refreshing the page.")
+							console.log(error)
 						});
 						
 	
@@ -374,16 +371,18 @@ const paintFrame = (meshes, allColors, sceneRef, width, height, blockSize, onGro
 	  block.matrix.multiply(rotationMatrix);
 	  block.rotation = randomRotation;
 	});
-
+	 
 	//por cada material le asigna los bloques que le corresponden
 	let organizedByMaterial = meshes.map(() => []);
 	blockInfos.forEach((blockInfo) => {
 	  organizedByMaterial[blockInfo.materialIndex].push(blockInfo);
 	});
 
+	console.log(meshes);
+
 	const geometry = meshes[0].geometry; //cualquier geometria porque todas son iguales
 	geometry.scale(blockSize/2 , blockSize/2 , blockSize/2 );
-	
+
 	//---------------------aqui se contruyen las instancedMesh---------------
 	organizedByMaterial.forEach((blocksForMaterial, index) => {				
 		const material = meshes[index].material;
@@ -419,14 +418,14 @@ const paintFrame = (meshes, allColors, sceneRef, width, height, blockSize, onGro
 
 		instancedMesh.geometry.setAttribute("color", allColorsBuffer);
 
-		instancedMesh.instanceMatrix.needsUpdate = true;		
+		instancedMesh.instanceMatrix.needsUpdate = true;
 		sceneRef.add(instancedMesh);
 		
 		convertInstancedMeshToGroup(instancedMesh, instaceColors, exportGroupRef);
 		
 	});// fin del siclo donde se crean las instancedMesh
 
-	onGroupRefChange(exportGroupRef.current);//devuelve al padre el grupo con todos los mesh para exportar
+	onGroupRefChange(exportGroupRef.current);//devuelve al padre el grupo con todos los mesh para exportar 
 
 };//fin de PaintFrame
 
