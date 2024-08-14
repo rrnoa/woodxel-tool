@@ -286,8 +286,6 @@ const Escena3D = ({ width, height, blockSize, croppedImg, setPixelInfo, onGroupR
 };// -------------------FIN del componente-----------------------
 
 const snapshot = (renderRef) => {	
-	console.log("take a shot")
-   
     let canvas = renderRef.domElement;   
 	
 	const dataURL = canvas.toDataURL('image/jpeg',1);
@@ -340,8 +338,8 @@ const paintFrame = (meshes, allColors, sceneRef, width, height, blockSize, onGro
 	  const matrix = new THREE.Matrix4();
 	  const fila = Math.floor(index / currentXBlocks);
 	  const columna = index % currentXBlocks;
-	  const posX = columna * (blockSize + 0.01) + offsetX;
-	  const posY = -fila * (blockSize + 0.01) - offsetY;
+	  const posX = columna * (blockSize) + offsetX;
+	  const posY = -fila * (blockSize) - offsetY;
 
 	  matrix.setPosition(posX, posY, 0);	
 	  
