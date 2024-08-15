@@ -16,7 +16,8 @@ const Export3d = ({exportGroup, handleLoading, mobile, setCurrentStep}) => {
     
 	const onclickHandler = (event) => {
         event.preventDefault();
-		setIsModalOpen(true);
+		compressModel();
+		//setIsModalOpen(true);
     }
 
 	const compressModel = () => {
@@ -59,11 +60,6 @@ const Export3d = ({exportGroup, handleLoading, mobile, setCurrentStep}) => {
 
   return (
 	<>
-	<ModalDownload 
-		isModalOpen={isModalOpen}
-		closeModal={closeModal}  
-		compressModel = {compressModel}
-	/>
 	
 	{mobile && (
 		<button id="woodxel_panel_3d" onClick={onclickHandler}>			
