@@ -62,7 +62,7 @@ export const configControls = (camera, renderer) => {
     //controls.minDistance = Math.max(5, Math.hypot(width, height)/4);
     //controls.minDistance = 0.5;
     controls.maxDistance = 20;
-    controls.enablePan = false;
+    //controls.enablePan = false;
     //controls.maxPolarAngle = THREE.MathUtils.degToRad(92);
    /*  controls.minPolarAngle = THREE.MathUtils.degToRad(45);
     controls.maxPolarAngle = controls.getPolarAngle();

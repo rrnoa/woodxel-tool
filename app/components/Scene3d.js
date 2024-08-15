@@ -24,8 +24,13 @@ const Escena3D = ({ width, height, blockSize, croppedImg, setPixelInfo, onGroupR
 	const models = [
 		'woodxel-resources/3d/medium_rough1.glb', 
 		'woodxel-resources/3d/medium_rough2.glb', 
-		'woodxel-resources/3d/medium_rough3.glb', 
-		'woodxel-resources/3d/medium_rough4.glb'];
+ 		'woodxel-resources/3d/medium_rough3.glb', 
+		'woodxel-resources/3d/medium_rough4.glb',
+		'woodxel-resources/3d/medium_rough5.glb',
+		'woodxel-resources/3d/medium_rough6.glb',
+		'woodxel-resources/3d/medium_rough7.glb',
+		'woodxel-resources/3d/medium_rough8.glb',
+	];
 
 	const meshesRef = useRef([]);//almacena los bloques cargados
 	const allColorsRef = useRef([]);
@@ -343,7 +348,7 @@ const paintFrame = (meshes, allColors, sceneRef, width, height, blockSize, onGro
 
 	  matrix.setPosition(posX, posY, 0);	
 	  
-	  const materialIndex = Math.floor(Math.random() * 4);	 
+	  const materialIndex = Math.floor(Math.random() * meshes.length);	 
 
 	  return {
 		materialIndex: materialIndex,
@@ -386,7 +391,7 @@ const paintFrame = (meshes, allColors, sceneRef, width, height, blockSize, onGro
 		const material = meshes[index].material;
 		material.vertexColors = true;
 		material.metalness = 0;
-		material.roughness = 0.9;
+		material.roughness = 1;
 		material.side = THREE.DoubleSide;
 		material.emissiveIntensity = 0;
 		material.needsUpdate = true;
